@@ -7,14 +7,10 @@ class ValidadorSenha {
 
     private val requisitos: List<Requisito> = RegrasValidacao.requisitos
 
-    fun validarSenha(senha: String): Pair<Boolean, String?> {
-        for (requisito in requisitos) {
-            if (!requisito.validacao(senha)) {
-                return Pair(false, requisito.mensagemErro)
-            }
-        }
-        return Pair(true, null)
-    }
+    fun validarSenha(senha: String): Pair<Boolean, String?> =
+        requisitos.find { !it.validacao(senha) }
+            ?.let { false to it.mensagemErro }
+            ?: (true to null)
 
     fun executarValidacao() {
         println("🔐 BEM-VINDO AO VALIDADOR DE SENHAS ABSOLUTO! 🔐")
@@ -48,11 +44,11 @@ class ValidadorSenha {
         println("📋 LISTA DE REQUISITOS:")
         println("=" * 50)
 
-        requisitos.forEachIndexed { index, requisito ->
-            // Remove o ❌ da mensagem e substitui por numeração
-            val mensagemLimpa = requisito.mensagemErro.replace("❌ ", "")
-            println("${index + 1}. $mensagemLimpa")
-        }
+        requisitos
+            .mapIndexed { index, requisito ->
+                "${index + 1}. ${requisito.mensagemErro.removePrefix("❌ ")}"
+            }
+            .forEach(::println)
 
         println("=" * 50)
         println()

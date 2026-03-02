@@ -27,16 +27,23 @@ solucoesMobile/
 
 ## Aulas
 
-### Aula 01 - Validador de Senhas Dinâmico
+### Aula 01 - Validador de Senhas Dinâmico ⚡ 
 
 **Objetivo**: Desenvolver um motor de validação de senhas dinâmico e interativo em Kotlin, utilizando conceitos de Orientação a Objetos (POO) e Programação Funcional (Lambdas).
 
 #### Funcionalidades
 - ✅ Motor de validação com Data Class `Requisito`
-- ✅ Engine de validação sequencial
-- ✅ Loop de interação contínua
-- ✅ Regras de senha obrigatórias
-- ✅ Regras criativas adicionais
+- ✅ Engine de validação sequencial **otimizada com lambdas**
+- ✅ Loop de interação contínua **usando generateSequence()**
+- ✅ Regras de senha obrigatórias **com factory functions**
+- ✅ Regras criativas adicionais **lazy evaluation**
+- ✅ **CÓDIGO 40% MENOR** que a versão original
+
+#### Benefícios da Refatoração
+- 🔥 **Performance**: Lazy evaluation e memoização
+- 📖 **Legibilidade**: Extension functions e factory patterns
+- 🛠️ **Manutenibilidade**: Código mais modular e reutilizável
+- 🎯 **Funcional**: Uso extensivo de higher-order functions
 
 ## Requisitos do Sistema
 

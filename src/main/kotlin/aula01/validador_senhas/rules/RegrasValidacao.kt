@@ -6,108 +6,89 @@ import java.util.*
 
 object RegrasValidacao {
 
-    val requisitos: List<Requisito> = listOf(
-        Requisito(
-            mensagemErro = "❌ A senha deve ter pelo menos 5 caracteres.",
-            validacao = { senha -> senha.length >= 5 }
-        ),
+    private val mesAtual by lazy {
+        SimpleDateFormat("MMM", Locale.ENGLISH).format(Date())
+    }
 
-        Requisito(
-            mensagemErro = "❌ A senha deve conter pelo menos uma letra maiúscula.",
-            validacao = { senha -> senha.any { it.isUpperCase() } }
-        ),
+    private val diaAtualRomano by lazy {
+        Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toRoman()
+    }
 
-        Requisito(
-            mensagemErro = "❌ A senha deve conter pelo menos um número.",
-            validacao = { senha -> senha.any { it.isDigit() } }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter a palavra 'kotlin' (maiúsculas ou minúsculas).",
-            validacao = { senha -> senha.lowercase().contains("kotlin") }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter o ano do Hexa: '2026'.",
-            validacao = { senha -> senha.contains("2026") }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter pelo menos um emoji (ex: ❄️, 🔥, ⚡).",
-            validacao = { senha ->
-                senha.any { char ->
-                    Character.UnicodeBlock.of(char) == Character.UnicodeBlock.EMOTICONS ||
-                    Character.UnicodeBlock.of(char) == Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS ||
-                    Character.UnicodeBlock.of(char) == Character.UnicodeBlock.SUPPLEMENTAL_SYMBOLS_AND_PICTOGRAPHS ||
-                    Character.UnicodeBlock.of(char) == Character.UnicodeBlock.TRANSPORT_AND_MAP_SYMBOLS
-                }
-            }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter o dia atual em algarismos romanos (II para dia 2).",
-            validacao = { senha ->
-                val diaAtual = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-                val romanoAtual = converterParaRomano(diaAtual)
-                senha.uppercase().contains(romanoAtual)
-            }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A soma dos números na senha deve ser pelo menos 15.",
-            validacao = { senha ->
-                val somaNumeros = senha.filter { it.isDigit() }
-                    .sumOf { it.toString().toInt() }
-                somaNumeros >= 15
-            }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter exatamente o número de caracteres que ela possui no momento (meta-validação).",
-            validacao = { senha ->
-                val tamanho = senha.length
-                senha.contains(tamanho.toString())
-            }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter pelo menos uma letra de cada: maiúscula, minúscula e um símbolo especial.",
-            validacao = { senha ->
-                val temMaiuscula = senha.any { it.isUpperCase() }
-                val temMinuscula = senha.any { it.isLowerCase() }
-                val temEspecial = senha.any { !it.isLetterOrDigit() && !it.isWhitespace() }
-                temMaiuscula && temMinuscula && temEspecial
-            }
-        ),
-
-        Requisito(
-            mensagemErro = "❌ A senha deve conter o mês atual abreviado em inglês (${obterMesAtual()}).",
-            validacao = { senha ->
-                val mesAtual = obterMesAtual()
-                senha.lowercase().contains(mesAtual.lowercase())
-            }
+    private val blocosEmoji by lazy {
+        setOf(
+            Character.UnicodeBlock.EMOTICONS,
+            Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS,
+            Character.UnicodeBlock.SUPPLEMENTAL_SYMBOLS_AND_PICTOGRAPHS,
+            Character.UnicodeBlock.TRANSPORT_AND_MAP_SYMBOLS
         )
+    }
+
+    private fun String.hasMinLength(min: Int) = length >= min
+    private fun String.hasPattern(predicate: (Char) -> Boolean) = any(predicate)
+    private fun String.containsIgnoreCase(text: String) = lowercase().contains(text.lowercase())
+    private fun String.digitSum() = filter(Char::isDigit).sumOf { it.digitToInt() }
+    private fun String.hasEmoji() = any { blocosEmoji.contains(Character.UnicodeBlock.of(it)) }
+
+    private fun requisito(message: String, validation: (String) -> Boolean) = Requisito(
+        mensagemErro = "❌ $message.",
+        validacao = validation
     )
 
-    private fun converterParaRomano(numero: Int): String {
+    private fun minLength(size: Int) = requisito(
+        "A senha deve ter pelo menos $size caracteres"
+    ) { it.hasMinLength(size) }
+
+    private fun hasCharType(tipo: String, predicate: (Char) -> Boolean) = requisito(
+        "A senha deve conter pelo menos um $tipo"
+    ) { it.hasPattern(predicate) }
+
+    private fun contains(text: String, description: String = text) = requisito(
+        "A senha deve conter $description"
+    ) { it.containsIgnoreCase(text) }
+
+    private val complexCharValidation: (String) -> Boolean = { senha ->
+        listOf(
+            senha.hasPattern(Char::isUpperCase),
+            senha.hasPattern(Char::isLowerCase),
+            senha.hasPattern { !it.isLetterOrDigit() && !it.isWhitespace() }
+        ).all { it }
+    }
+
+    val requisitos: List<Requisito> = listOf(
+        minLength(5),
+        hasCharType("letra maiúscula", Char::isUpperCase),
+        hasCharType("número", Char::isDigit),
+        contains("kotlin", "a palavra 'kotlin' (maiúsculas ou minúsculas)"),
+        contains("2026", "o ano do Hexa: '2026'"),
+
+        requisito("A senha deve conter pelo menos um emoji (ex: ❄️, 🔥, ⚡)") { it.hasEmoji() },
+
+        requisito("A senha deve conter o dia atual em algarismos romanos ($diaAtualRomano para dia ${Calendar.getInstance().get(Calendar.DAY_OF_MONTH)})")
+        { it.uppercase().contains(diaAtualRomano) },
+
+        requisito("A soma dos números na senha deve ser pelo menos 15") { it.digitSum() >= 15 },
+
+        requisito("A senha deve conter exatamente o número de caracteres que ela possui no momento (meta-validação)")
+        { senha -> senha.contains(senha.length.toString()) },
+
+        requisito("A senha deve conter pelo menos uma letra de cada: maiúscula, minúscula e um símbolo especial", complexCharValidation),
+
+        requisito("A senha deve conter o mês atual abreviado em inglês ($mesAtual)") { it.containsIgnoreCase(mesAtual) }
+    )
+
+    private val romanCache = mutableMapOf<Int, String>()
+    private fun Int.toRoman(): String = romanCache.getOrPut(this) {
         val valores = intArrayOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
         val simbolos = arrayOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
 
-        var num = numero
-        val resultado = StringBuilder()
-
-        for (i in valores.indices) {
-            while (num >= valores[i]) {
-                resultado.append(simbolos[i])
-                num -= valores[i]
+        var num = this
+        buildString {
+            valores.indices.forEach { i ->
+                while (num >= valores[i]) {
+                    append(simbolos[i])
+                    num -= valores[i]
+                }
             }
         }
-
-        return resultado.toString()
-    }
-
-    private fun obterMesAtual(): String {
-        val formato = SimpleDateFormat("MMM", Locale.ENGLISH)
-        return formato.format(Date())
     }
 }
