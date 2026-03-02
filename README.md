@@ -37,7 +37,6 @@ solucoesMobile/
 - ✅ Loop de interação contínua **usando generateSequence()**
 - ✅ Regras de senha obrigatórias **com factory functions**
 - ✅ Regras criativas adicionais **lazy evaluation**
-- ✅ **CÓDIGO 40% MENOR** que a versão original
 
 #### Benefícios da Refatoração
 - 🔥 **Performance**: Lazy evaluation e memoização
