@@ -6,6 +6,21 @@ import java.util.*
 
 object RegrasValidacao {
 
+    private fun Int.toRoman(): String {
+        val valores = intArrayOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+        val simbolos = arrayOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+
+        var num = this
+        return buildString {
+            valores.indices.forEach { i ->
+                while (num >= valores[i]) {
+                    append(simbolos[i])
+                    num -= valores[i]
+                }
+            }
+        }
+    }
+
     private val mesAtual by lazy {
         SimpleDateFormat("MMM", Locale.ENGLISH).format(Date())
     }
@@ -27,7 +42,28 @@ object RegrasValidacao {
     private fun String.hasPattern(predicate: (Char) -> Boolean) = any(predicate)
     private fun String.containsIgnoreCase(text: String) = lowercase().contains(text.lowercase())
     private fun String.digitSum() = filter(Char::isDigit).sumOf { it.digitToInt() }
-    private fun String.hasEmoji() = any { blocosEmoji.contains(Character.UnicodeBlock.of(it)) }
+    private fun String.hasEmoji(): Boolean {
+        val knownEmojis = listOf("❄", "🔥", "⚡", "🔐", "🔒", "🔓", "😀", "🚀", "💻", "🎯", "⭐", "❤")
+
+        // Primeiro: verificar se contém emojis da lista conhecida
+        if (knownEmojis.any { this.contains(it) }) {
+            return true
+        }
+
+        // Segundo: verificação por regex Unicode (mais robusta para multi-byte)
+        val emojiRegex = Regex("[\u2600-\u27BF]|[\uD83C][\uDF00-\uDFFF]|[\uD83D][\uDC00-\uDE4F]|[\uD83D][\uDE80-\uDEFF]")
+        if (emojiRegex.containsMatchIn(this)) {
+            return true
+        }
+
+        // Terceiro: verificação por código Unicode (fallback)
+        return this.any { char ->
+            val code = char.code
+            code in 0x1F300..0x1F6FF || // Faixa principal de emojis
+            code in 0x2600..0x26FF ||   // Símbolos diversos
+            code in 0x2700..0x27BF      // Dingbats
+        }
+    }
 
     private fun requisito(message: String, validation: (String) -> Boolean) = Requisito(
         mensagemErro = "❌ $message.",
@@ -50,7 +86,7 @@ object RegrasValidacao {
         listOf(
             senha.hasPattern(Char::isUpperCase),
             senha.hasPattern(Char::isLowerCase),
-            senha.hasPattern { !it.isLetterOrDigit() && !it.isWhitespace() }
+            senha.hasPattern { char -> !char.isLetterOrDigit() && !char.isWhitespace() }
         ).all { it }
     }
 
@@ -61,7 +97,7 @@ object RegrasValidacao {
         contains("kotlin", "a palavra 'kotlin' (maiúsculas ou minúsculas)"),
         contains("2026", "o ano do Hexa: '2026'"),
 
-        requisito("A senha deve conter pelo menos um emoji (ex: ❄️, 🔥, ⚡)") { it.hasEmoji() },
+        requisito("A senha deve conter pelo menos um emoji (ex: ❄️, 🔥, ⚡, 🔐)") { it.hasEmoji() },
 
         requisito("A senha deve conter o dia atual em algarismos romanos ($diaAtualRomano para dia ${Calendar.getInstance().get(Calendar.DAY_OF_MONTH)})")
         { it.uppercase().contains(diaAtualRomano) },
@@ -75,20 +111,4 @@ object RegrasValidacao {
 
         requisito("A senha deve conter o mês atual abreviado em inglês ($mesAtual)") { it.containsIgnoreCase(mesAtual) }
     )
-
-    private val romanCache = mutableMapOf<Int, String>()
-    private fun Int.toRoman(): String = romanCache.getOrPut(this) {
-        val valores = intArrayOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-        val simbolos = arrayOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-
-        var num = this
-        buildString {
-            valores.indices.forEach { i ->
-                while (num >= valores[i]) {
-                    append(simbolos[i])
-                    num -= valores[i]
-                }
-            }
-        }
-    }
 }

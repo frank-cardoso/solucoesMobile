@@ -18,37 +18,35 @@ fun main() {
 
     val acoes = mapOf(
         "1" to {
-            println("\n" + "=" * 60)
+            println("\n" + "=".repeat(60))
             validador.executarValidacao()
-            println("=" * 60 + "\n")
+            println("=".repeat(60))
         },
         "2" to {
             println()
             validador.exibirRequisitos()
         },
         "3" to {
-            listOf(
-                "\n👋 Obrigado por usar o Validador de Senhas!",
-                "📚 Continue estudando Kotlin e POO! 🎓"
-            ).forEach(::println)
+            println("\n👋 Obrigado por usar o Validador de Senhas!")
+            println("📚 Continue estudando Kotlin e POO! 🎓")
         }
     )
 
     generateSequence {
-        listOf(
-            "🎮 MENU PRINCIPAL:",
-            "1. 🚀 Iniciar Desafio da Senha",
-            "2. 📋 Ver Requisitos",
-            "3. 🚪 Sair",
-            "\nEscolha uma opção (1-3): "
-        ).forEach(::print)
+        println("\n🎮 MENU PRINCIPAL:")
+        println("┌─────────────────────────────────────┐")
+        println("│ 1. 🚀 Iniciar Desafio da Senha     │")
+        println("│ 2. 📋 Ver Requisitos                │")
+        println("│ 3. 🚪 Sair                          │")
+        println("└─────────────────────────────────────┘")
+        print("\n➤ Escolha uma opção (1-3): ")
 
         readLine()
     }
     .takeWhile { it != "3" }
     .forEach { opcao ->
         acoes[opcao]?.invoke()
-            ?: println("❌ Opção inválida! Escolha 1, 2 ou 3.\n")
+            ?: println("\n❌ Opção inválida! Por favor, escolha 1, 2 ou 3.")
     }
 
     acoes["3"]?.invoke()
