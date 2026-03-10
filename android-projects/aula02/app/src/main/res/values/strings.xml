@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pedra, Papel e Tesoura</string>
+    <string name="titulo_jogo">Pedra, Papel e Tesoura</string>
+    <string name="botao_jogar">JOGAR</string>
+    <string name="resultado_inicial">Pronto para jogar!</string>
+    <string name="sorteando">Sorteando...</string>
+    <string name="resultado_pedra">PEDRA</string>
+    <string name="resultado_papel">PAPEL</string>
+    <string name="resultado_tesoura">TESOURA</string>
+    <string name="animando">🔄 Animando...</string>
+    <string name="imagem_placeholder">🖼️ Imagem</string>
+</resources>
