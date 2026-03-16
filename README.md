@@ -4,7 +4,6 @@ Este repositório contém os commits das aulas de Soluções Mobile da matéria 
 
 ## Estrutura do Projeto
 
-```
 # 📱 Soluções Mobile - Repositório de Exercícios
 
 Repositório para exercícios e projetos da disciplina de **Soluções Mobile** do curso de Engenharia de Software.
@@ -181,7 +180,6 @@ src/main/kotlin/aulaXX/nome_exercicio/
 - **README.md principal**: Visão geral do repositório (este arquivo)
 - **README.md por projeto**: Detalhes específicos de cada exercício
 - **docs/guidelines/**: Guias de desenvolvimento e boas práticas
-- **Comentários no código**: Documentação inline para lógicas complexas
 
 ### Templates
 - **Android Base**: `android-projects/templates/` - Template para novos projetos Android
@@ -193,93 +191,6 @@ src/main/kotlin/aulaXX/nome_exercicio/
 |------|---------|--------|------------|-----------------|
 | 01 | Validador de Senhas | ✅ Completo | Kotlin Console | Validação dinâmica, Menu interativo |
 | 02 | Pedra, Papel e Tesoura | ✅ Funcional | Android/Compose | Jogo com animações, UI moderna |
-
-## 🚀 Próximos Passos
-
-### Para Aula 02 (Pedra, Papel e Tesoura)
-- [ ] **Implementar efeitos sonoros** (opcional)
-- [ ] **Adicionar vibração** no resultado
-- [ ] **Criar APK** para distribuição
-- [ ] **Testes unitários** para lógica do jogo
-
-### Para Futuras Aulas
-- [ ] **Usar template** em `android-projects/templates/`
-- [ ] **Seguir convenções** estabelecidas
-- [ ] **Manter documentação** atualizada
-- [ ] **Implementar testes** automatizados
-
-## 🎮 Features Implementadas - Pedra, Papel e Tesoura
-
-### Core Features ✅
-- **Sorteio aleatório** entre as três opções usando `Random()`
-- **Animação visual** fluida durante sorteio (10 ciclos, 100ms cada)
-- **Estados bem definidos** com `EstadoJogo` enum
-- **Interface responsiva** adaptada para diferentes tamanhos de tela
-- **Emojis representativos** de alta qualidade (🪨📃✂️)
-
-### UI/UX ✅
-- **Material Design 3** com theme customizado
-- **Cards elevated** para hierarquia visual clara
-- **Botão responsivo** que desabilita durante operações
-- **Feedback visual** imediato em todos os estados
-- **Tipografia consistente** seguindo guidelines Material
-- **Cores acessíveis** com contraste adequado
-
-### Arquitetura ✅
-- **MVVM pattern** com Compose State management
-- **Separação clara** de responsabilidades
-- **Models tipados** (`OpcaoJogo`, `EstadoJogo`)
-- **Componentes reutilizáveis** (`ImagemAnimada`)
-- **Coroutines** para operações assíncronas
-- **Estado gerenciado** com `remember` e `LaunchedEffect`
-
----
-
-💡 **Dica**: Este repositório segue padrões profissionais e está pronto para desenvolvimento acadêmico e projetos reais. Cada exercício é independente e pode ser executado separadamente.
-
-🎉 **A estrutura está 100% pronta para uso acadêmico e profissional!**
-├── README.md
-├── src/
-│   └── main/
-│       └── kotlin/
-│           └── aula01/
-│               └── validador_senhas/
-│                   ├── models/
-│                   │   └── Requisito.kt
-│                   ├── engine/
-│                   │   └── ValidadorSenha.kt
-│                   ├── rules/
-│                   │   └── RegrasValidacao.kt
-│                   └── Main.kt
-├── docs/
-│   └── aula01/
-│       └── exercicio_validador_senhas.md
-└── .gitignore
-```
-
-## Aulas
-
-### Aula 01 - Validador de Senhas Dinâmico ⚡ 
-
-**Objetivo**: Desenvolver um motor de validação de senhas dinâmico e interativo em Kotlin, utilizando conceitos de Orientação a Objetos (POO) e Programação Funcional (Lambdas).
-
-#### Funcionalidades
-- ✅ Motor de validação com Data Class `Requisito`
-- ✅ Engine de validação sequencial **otimizada com lambdas**
-- ✅ Loop de interação contínua **usando generateSequence()**
-- ✅ Regras de senha obrigatórias **com factory functions**
-- ✅ Regras criativas adicionais **lazy evaluation**
-
-#### Benefícios da Refatoração
-- 🔥 **Performance**: Lazy evaluation e memoização
-- 📖 **Legibilidade**: Extension functions e factory patterns
-- 🛠️ **Manutenibilidade**: Código mais modular e reutilizável
-- 🎯 **Funcional**: Uso extensivo de higher-order functions
-
-## Requisitos do Sistema
-
-- Kotlin
-- JVM 8+
 
 ## Autor
 
